@@ -1,0 +1,225 @@
+<html>
+    <header>
+      <link rel="stylesheet" href="/admin/iziToast.css">
+      <link rel="stylesheet" href="/admin/iziToast.min.css">
+      <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.min.js" integrity="sha384-cuYeSxntonz0PPNlHhBs68uyIAVpIIOZZ5JqeqvYYIcEL727kskC66kF92t6Xl2V" crossorigin="anonymous"></script>
+        <script src="/admin/iziToast.js"></script>
+        <script src="/admin/iziToast.min.js"></script>
+    </header>
+    <div style="width: 100%"><p style="float: left;">Админка (вертски 0)</p> <button style="float: right;" onclick="LeaveFromDota2()">Выйти</button></div>
+    <div class="container overflow-hidden">
+        <div class="row gx-5">
+          <div class="col">
+           <div class="p-3 border bg-light">
+            <h3>Смена пароля:</h3>
+                <p>Новый пароль</p>
+                <input id="newPass" type="text">
+                <p>Старый пароль</p>
+                <input id="oldPass" type="text">
+                <p>Повторите старый пароль</p>
+                <input id="old2Pass" type="text">
+                <button onclick="changePasswd()">Сменить</button>
+            </div>
+          </div>
+          <div class="col">
+          <div class="col">
+            <div class="p-3 border bg-light">
+                <h3>Загрузить файл:</h3>
+                <p>Название</p>
+                <input id="filename" type="text">
+                <p>Описание</p>
+                <input id="filedesk" type="text">
+                <p>URL Image</p>
+                <input id="urlimage" type="text">
+                <input id="buttonLoad" type="file">
+                <button onclick="uploadFile()">Загрузить</button>
+          </div>
+        </div>
+      </div>
+      <div style="display:grid">
+        <table class="p-3 border bg-light">
+            <thead>
+                <tr>
+                    <th colspan="2">Ваши файлы</th>
+                </tr>
+            </thead>
+            <tbody id="tableAdd">
+                <tr class="border">
+                    <td class="border">Название файл</td>
+                    <td class="border">Сыллка на картинку</td>
+                    <td class="border">Описание</td>
+                    <td class="border">Хэш</td>
+                    <td class="border"><button style="float: right;">Дейсвтие</button></td>
+                </tr>
+                
+            </tbody>
+        </table>
+      </div>
+</div>
+</div>
+<script>
+window.onload = async (e) => { 
+  const response = await fetch("/api/getFiles", {
+        method: 'POST', 
+        mode: 'cors',
+        cache: 'no-cache', 
+        credentials: 'same-origin',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        redirect: 'follow', 
+        referrerPolicy: 'no-referrer', 
+      });
+      if(response.status == 200) { 
+     const data = await response.json();
+     for(d of data) {
+  document.getElementById('tableAdd').innerHTML += `<tr id="${d.hash}" class="border">
+                    <td class="border shit">${d.name}</td>
+                    <td class="border shit">${d.imgurl}</td>
+                    <td class="border">${d.description}</td>
+                    <td class="border">${d.hash}</td>
+                    <td class="border"><button style="float: right;" onclick="rmFile('${d.hash}')">Удалить</button></td>
+                </tr>`;
+     }
+}
+}
+const changePasswd = async () => {
+    const response = await fetch("/api/changePass", {
+        method: 'POST', 
+        mode: 'cors',
+        cache: 'no-cache', 
+        credentials: 'same-origin',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        redirect: 'follow', 
+        referrerPolicy: 'no-referrer', 
+        body: JSON.stringify({newPassword: document.getElementById("newPass").value, oldPassword: document.getElementById("oldPass").value, old2Password: document.getElementById("old2Pass").value})
+      });
+      const d = await response.text();
+      if(response.status == 200) { 
+        iziToast.success({
+    title: 'OK',
+    message: d,
+    });
+        window.location.href = "/admin/auth.html"
+      } else {
+        iziToast.error({
+    title: 'Error',
+    message: d,
+    });
+      }
+};
+console.log(changePasswd);
+
+
+const uploadFile = async () => {
+    const input = document.getElementById('buttonLoad')
+        
+        if(!input.files[0]) return iziToast.error({
+    title: 'Error',
+    message: "Вы не загрузили файл",
+    });
+        const data = new FormData();
+        data.append('file', input.files[0])
+        console.log(input.files[0]);
+        data.append('Name', document.getElementById("filename").value);
+        data.append('Description', document.getElementById("filedesk").value);
+        data.append('URLImage', document.getElementById("urlimage").value);
+        console.log(data);
+        const response = await fetch('/api/loadFile', {
+        method: 'POST',
+        body: data
+        });
+
+      if(response.status == 200) { 
+        const d = await response.json();
+  document.getElementById('tableAdd').innerHTML += `<tr id="${d.hash}" class="border">
+                    <td class="border shit">${d.name}</td>
+                    <td class="border shit">${d.imgur}</td>
+                    <td class="border">${d.description}</td>
+                    <td class="border">${d.hash}</td>
+                    <td class="border"><button style="float: right;" onclick="rmFile('${d.hash}')">Удалить</button></td>
+                </tr>`;
+                iziToast.success({
+    title: 'OK',
+    message: "Файл загружен",
+    });
+      } else {
+        const d = await response.text();
+        iziToast.error({
+    title: 'Error',
+    message: d,
+    });
+      }
+};
+const rmFile = async (hash) => {
+        const response = await fetch(`/api/getFiles?hash=${hash}&rm=true`, {
+        method: 'POST'
+        });
+        const d = await response.text();
+      if(response.status == 200) { 
+      document.getElementById(hash).remove();
+      iziToast.success({
+    title: 'OK',
+    message: d,
+    });
+      } else {
+        iziToast.error({
+    title: 'Error',
+    message: d,
+    });
+      }
+};
+const LeaveFromDota2 = async () => {
+        const response = await fetch(`/api/logout`, {
+        method: 'POST'
+        });
+
+      if(response.status == 200) { 
+        window.location.href = "/admin/auth.html"
+      }
+};
+</script>
+<style>
+    .card {
+position: relative;
+width: 300px;
+height: 400px;
+margin: 0 auto;
+background: #fff;
+border-radius: 15px;
+box-shadow: 0 15px 60px rgba(0, 0, 0, 0.5);
+    }
+    .container {
+    max-width: 100vw;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    grid-gap: 35px;
+    margin: 0 auto;
+    padding: 40px 0;
+    }
+    .xz {
+        
+  display:flexbox;
+  justify-content: center;
+  align-items: center;
+  font-family: "Righteous", cursive;
+  min-height: 100vh;
+  background-color: #a9c9ff;
+  background-image: linear-gradient(180deg, #a9c9ff 0%, #ffbbec 100%);
+    }
+    td
+{
+ max-width: 100px;
+ overflow: hidden;
+ text-overflow: ellipsis;
+ white-space: nowrap;
+}
+    body {
+  font-family: "Righteous", cursive;
+  min-height: 100vh;
+    }
+</style>
+</html>

@@ -1,0 +1,47 @@
+<html>
+    <head>
+        <meta charset="UTF-8">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+    <div class="glitch-container">
+        <p class="glitch" data-text="Привет!">Привет!</p>
+        <p class="glitch" data-text="Хочешь пройти дальше?">Хочешь пройти дальше?</p>
+    </div>
+    <div class="container2">
+        <button>Да</button>
+    </div>
+    </div>
+    
+</body>
+<script>
+const button = document.querySelector('button');
+
+button.addEventListener('click', function(event) {
+event.preventDefault(); // Отменяем перезагрузку страницы
+
+const xhr = new XMLHttpRequest();
+xhr.open('POST', '/api/handler');
+xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+xhr.onload = function() {
+if (xhr.status === 200) {
+ const token = xhr.responseText;
+ document.cookie = `jwt=${token}; max-age=${2 * 60 * 60}; path=/`;
+
+ console.log(token);
+ window.location.href = '/';
+} else {
+ console.error(xhr.statusText);
+}
+};
+xhr.onerror = function() {
+console.error(xhr.statusText);
+};
+xhr.send();
+});
+ </script>
+</html>

@@ -1,0 +1,115 @@
+.container {
+    position: relative;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
+body {
+    background-color: black;
+}
+p, button {
+    font-family: 'Press Start 2P', cursive;
+    font-size: xx-large;
+    color:white;
+}
+
+.glitch-container {
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    position: relative;
+    display: inline-block;
+    text-align: center;
+  }
+  
+  .glitch {
+    position: relative;
+    display: inline-block;
+  }
+  
+  .glitch::before,
+  .glitch::after {
+    content: attr(data-text);
+    position: absolute;
+    top: 0;
+    left: 0;
+  }
+  
+  .glitch::before {
+
+    text-shadow: -2px 0 red;
+    animation: glitch-anim-1 2s infinite linear alternate-reverse;
+  }
+  
+  .glitch::after {
+
+    text-shadow: 2px 2px blue;
+    animation: glitch-anim-2 3s infinite linear alternate-reverse;
+  }
+  
+  @keyframes glitch-anim-1 {
+    0% {
+      clip: rect(26px, 9999px, 39px, 0);
+    }
+    20%, 24%, 60% {
+      clip: rect(18px, 9999px, 38px, 0);
+    }
+    22%, 26%, 30%, 34%, 64%, 70% {
+      clip: rect(0, 9999px, 48px, 0);
+    }
+    100% {
+      clip: rect(50px, 9999px, 3px, 0);
+    }
+  }
+  
+  @keyframes glitch-anim-2 {
+    0% {
+      clip: rect(32px, 9999px, 54px, 0);
+    }
+    12%, 16%, 42% {
+      clip: rect(18px, 9999px, 38px, 0);
+    }
+    18%, 22%, 30%, 36%, 48%, 50%, 54%, 62% {
+      clip: rect(0, 9999px, 48px, 0);
+    }
+    100% {
+      clip: rect(42px, 9999px, 6px, 0);
+    }
+  }
+
+  .container2 {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .social-icons {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .social-icons a {
+    display: inline-block;
+    margin: 10px;
+    font-size: 32px;
+    color: #fff;
+    text-decoration: none;
+  }
+
+  .social-icons a i {
+    transition: transform 0.3s ease;
+  }
+
+  .social-icons a i:hover {
+    transform: scale(1.2);
+  }
+
+
+  body > div > div:nth-child(1) > p {
+    transition: transform 1s ease;
+  }
+
+  body > div > div:nth-child(1) > p:hover {
+    transform: scale(1.2);
+  }

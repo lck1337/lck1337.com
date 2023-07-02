@@ -1,0 +1,134 @@
+.container {
+    position: relative;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
+body {
+    background-color: black;
+}
+p, button {
+    font-family: 'Press Start 2P', cursive;
+    font-size: x-large;
+    color:white;
+}
+
+.glitch-container {
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    position: relative;
+    display: inline-block;
+    text-align: center;
+  }
+  
+  .glitch {
+    position: relative;
+    display: inline-block;
+  }
+  
+  .glitch::before,
+  .glitch::after {
+    content: attr(data-text);
+    position: absolute;
+    top: 0;
+    left: 0;
+  }
+  
+  .glitch::before {
+
+    text-shadow: -2px 0 red;
+    animation: glitch-anim-1 2s infinite linear alternate-reverse;
+  }
+  
+  .glitch::after {
+
+    text-shadow: 2px 2px blue;
+    animation: glitch-anim-2 3s infinite linear alternate-reverse;
+  }
+  
+  @keyframes glitch-anim-1 {
+    0% {
+      clip: rect(26px, 9999px, 39px, 0);
+    }
+    20%, 24%, 60% {
+      clip: rect(18px, 9999px, 38px, 0);
+    }
+    22%, 26%, 30%, 34%, 64%, 70% {
+      clip: rect(0, 9999px, 48px, 0);
+    }
+    100% {
+      clip: rect(50px, 9999px, 3px, 0);
+    }
+  }
+  
+  @keyframes glitch-anim-2 {
+    0% {
+      clip: rect(32px, 9999px, 54px, 0);
+    }
+    12%, 16%, 42% {
+      clip: rect(18px, 9999px, 38px, 0);
+    }
+    18%, 22%, 30%, 36%, 48%, 50%, 54%, 62% {
+      clip: rect(0, 9999px, 48px, 0);
+    }
+    100% {
+      clip: rect(42px, 9999px, 6px, 0);
+    }
+  }
+
+  .container2 {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  button {
+    padding: 10px 20px;
+    font-size: 18px;
+    color: #fff;
+    background-color: #333;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
+    transition: background-color 0.3s ease;
+  }
+  
+  button:hover {
+    background-color: #555;
+    animation:   shake-vertical 0.9s linear infinite, color-change 2s infinite, rainbow-text 2s infinite;
+    
+  }
+  @keyframes rainbow-text {
+    0% {
+      color: white;
+    }
+    50% {
+      color: black;
+    }
+    100% {
+        color: white;
+      }
+  }
+  @keyframes color-change {
+    0% {
+      background-color: #555;
+    }
+    50% {
+      background-color: #ff0000;
+    }
+    100% {
+      background-color: #555;
+    }
+  }
+
+
+  
+  @keyframes shake-vertical {
+    0% { transform: translateY(0); }
+    25% { transform: translateY(-5px); }
+    50% { transform: translateY(5px); }
+    75% { transform: translateY(-5px); }
+    100% { transform: translateY(0); }
+  }
